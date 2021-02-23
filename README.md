@@ -10,11 +10,11 @@
 
 # Installation and Setup Instructions
 
-###mkvirtualenv envdevgrid
-###pip install flask
-###pip install flask_sqlalchemy
-###pip install requests
-###flask run
+### mkvirtualenv envdevgrid
+### pip install flask
+### pip install flask_sqlalchemy
+### pip install requests
+### flask run
 
 
 
