@@ -4,24 +4,27 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///weather.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'thisisasecret'
 db = SQLAlchemy(app)
 
-
+#SQL Alchemy class database
 class City(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
 
 
+#Get API informations
 def get_weather_data(city):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=b21a2633ddaac750a77524f91fe104e7"
     r = requests.get(url).json()
     return r
 
 
+# Get information from API, store the data in database
 @app.route('/')
 def index_get():
     cities = City.query.all()
@@ -38,9 +41,12 @@ def index_get():
         }
         weather_data.append(weather)
 
-    return render_template('weather.html', weather_data=weather_data)
-    #return jsonify(weather)
+    return render_template('weather.html', weather_data=weather_data) #Render in HTML file
+    #return jsonify(weather)  #Render in JSON file
 
+
+#informs validation message (If you already have the city or
+# not in the database)
 @app.route('/', methods=['POST'])
 def index_post():
     err_msg = ''
@@ -70,7 +76,7 @@ def index_post():
     return redirect(url_for('index_get'))
 
 
-
+#Delete the data (cities)
 @app.route('/delete/<name>')
 def delete_city(name):
     city = City.query.filter_by(name=name).first()
